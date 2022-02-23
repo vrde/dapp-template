@@ -1,10 +1,10 @@
 <script lang="ts">
   import ConnectWallet from "./ConnectWallet.svelte";
-  import { address, balance, network } from "../stores/wallet";
+  import { provider, address, balance, network } from "../stores/wallet";
   import { formatEther } from "ethers/lib/utils";
 </script>
 
-{#if $address}
+{#if $provider}
   <ul>
     <li>Address: {$address}</li>
     <li>Network: {$network}</li>
