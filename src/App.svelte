@@ -1,7 +1,13 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import Header from "./lib/Header.svelte";
   import SignMessage from "./lib/SignMessage.svelte";
-  import { signer } from "./stores/wallet";
+  import { init, signer } from "./stores/wallet";
+
+  onMount(async () => {
+    await init();
+  });
 </script>
 
 <Header />

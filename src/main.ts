@@ -1,7 +1,13 @@
-import App from './App.svelte'
+import App from "./App.svelte";
 
-const app = new App({
-  target: document.getElementById('app')
-})
+const target = document.getElementById("app");
+let app: App;
 
-export default app
+if (target) {
+  app = new App({
+    target,
+  });
+} else {
+  throw "Error: mount point for app doesn't exist.";
+}
+export default app;

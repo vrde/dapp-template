@@ -3,7 +3,13 @@ import { derived, Readable, writable } from "svelte/store";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
-export async function connect() {
+let __web3Modal: Web3Modal;
+
+async function __initWeb3Modal() {
+  if (__web3Modal) {
+    console.log("Web3Modal already initialized");
+    return;
+  }
   const providerOptions = {
     walletconnect: {
       package: WalletConnectProvider,
@@ -12,18 +18,34 @@ export async function connect() {
       },
     },
   };
-
-  const web3Modal = new Web3Modal({
+  __web3Modal = new Web3Modal({
     network: "mainnet",
+    cacheProvider: true,
     providerOptions,
   });
+}
 
-  const instance = await web3Modal.connect();
+export async function init() {
+  __initWeb3Modal();
+  // Autoconnect
+  if (__web3Modal.cachedProvider) {
+    await connect();
+  }
+}
+
+export async function connect() {
+  if (!__web3Modal) {
+    __initWeb3Modal();
+  }
+  const instance = await __web3Modal.connect();
   provider.set(new ethers.providers.Web3Provider(instance));
+
+  window.ethereum.removeAllListeners();
   window.ethereum.on("accountsChanged", (accounts: string[]) => {
     accountsChanged.set(Date.now());
     console.log(accounts);
   });
+
   window.ethereum.on("chainChanged", (chainId: number) => {
     accountsChanged.set(Date.now());
     console.log(chainId);
@@ -31,6 +53,7 @@ export async function connect() {
 }
 
 export const provider = writable<ethers.providers.Web3Provider | null>();
+
 export const accountsChanged = writable(0);
 
 derived(provider, ($provider) => {
