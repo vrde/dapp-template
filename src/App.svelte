@@ -1,7 +1,12 @@
 <script lang="ts">
-  import ConnectWallet from "./lib/ConnectWallet.svelte";
+  import Header from "./lib/Header.svelte";
+  import SignMessage from "./lib/SignMessage.svelte";
+  import { signer } from "./stores/wallet";
 </script>
 
+<Header />
 <main>
-  <ConnectWallet />
+  {#if $signer}
+    <SignMessage />
+  {/if}
 </main>
