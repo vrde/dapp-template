@@ -1,11 +1,16 @@
-import { ethers } from "ethers";
+import { ethers, Signer, BigNumber } from "ethers";
 import { derived, Readable, writable } from "svelte/store";
 import { connectWeb3Modal, initWeb3Modal } from "./web3Modal";
 
 export async function init() {
   const modal = await initWeb3Modal();
   if (modal.cachedProvider) {
-    await connect();
+    try {
+      await connect();
+    } catch (e) {
+      console.log("Cannot autoconnect:", e);
+      modal.clearCachedProvider();
+    }
   }
 }
 
@@ -20,31 +25,39 @@ export async function connect() {
   });
 }
 
+export async function disconnect() {}
+
 export const provider = writable<ethers.providers.Web3Provider | null>();
 
 export const accountsChanged = writable(0);
 
-export const signer: Readable<ethers.providers.JsonRpcSigner | null> = derived(
+export const signer: Readable<Signer | null> = derived(
   [provider, accountsChanged],
   ([$provider], set) => {
     if ($provider) {
-      set($provider.getSigner());
+      (async () => {
+        const _signer = $provider.getSigner();
+        let _address: string;
+        // Check if signer has an address. A signer might not have any address
+        // available if the user disconnects all accounts.
+        try {
+          _address = await _signer.getAddress();
+        } catch (e) {
+          set(null);
+          address.set(null);
+          return;
+        }
+        set(_signer);
+        address.set(_address);
+      })();
     } else {
       set(null);
+      address.set(null);
     }
   }
 );
 
-export const address: Readable<string | null> = derived(
-  signer,
-  ($signer, set) => {
-    if ($signer) {
-      $signer.getAddress().then(set);
-    } else {
-      set(null);
-    }
-  }
-);
+export const address = writable<string | null>();
 
 export const chainId: Readable<number | null> = derived(
   signer,
@@ -68,9 +81,10 @@ export const network: Readable<string | null> = derived(
   }
 );
 
-export const balance: Readable<ethers.BigNumber | null> = derived(
+export const balance: Readable<BigNumber | null> = derived(
   signer,
   ($signer, set) => {
+    console.log("balance", $signer);
     if ($signer) {
       $signer.getBalance().then(set);
     } else {
