@@ -1,55 +1,22 @@
 import { ethers } from "ethers";
 import { derived, Readable, writable } from "svelte/store";
-import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-
-let __web3Modal: Web3Modal;
-
-async function __initWeb3Modal() {
-  if (__web3Modal) {
-    console.log("Web3Modal already initialized");
-    return;
-  }
-  const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        infuraId: import.meta.env.VITE_INFURA_API_KEY,
-      },
-    },
-  };
-  __web3Modal = new Web3Modal({
-    network: "mainnet",
-    cacheProvider: true,
-    providerOptions,
-  });
-}
+import { connectWeb3Modal, initWeb3Modal } from "./web3Modal";
 
 export async function init() {
-  __initWeb3Modal();
-  // Autoconnect
-  if (__web3Modal.cachedProvider) {
+  const modal = await initWeb3Modal();
+  if (modal.cachedProvider) {
     await connect();
   }
 }
 
 export async function connect() {
-  if (!__web3Modal) {
-    __initWeb3Modal();
-  }
-  const instance = await __web3Modal.connect();
-  provider.set(new ethers.providers.Web3Provider(instance));
-
-  instance.removeAllListeners();
-
-  instance.on("accountsChanged", (accounts: string[]) => {
+  const connection = await connectWeb3Modal();
+  provider.set(new ethers.providers.Web3Provider(connection));
+  connection.on("accountsChanged", (accounts: string[]) => {
     accountsChanged.set(Date.now());
-    console.log(accounts);
   });
-
-  instance.on("chainChanged", (chainId: number) => {
-    accountsChanged.set(Date.now());
-    console.log(chainId);
+  connection.on("chainChanged", (chainId: number) => {
+    connect();
   });
 }
 
