@@ -40,13 +40,14 @@ export async function connect() {
   const instance = await __web3Modal.connect();
   provider.set(new ethers.providers.Web3Provider(instance));
 
-  window.ethereum.removeAllListeners();
-  window.ethereum.on("accountsChanged", (accounts: string[]) => {
+  instance.removeAllListeners();
+
+  instance.on("accountsChanged", (accounts: string[]) => {
     accountsChanged.set(Date.now());
     console.log(accounts);
   });
 
-  window.ethereum.on("chainChanged", (chainId: number) => {
+  instance.on("chainChanged", (chainId: number) => {
     accountsChanged.set(Date.now());
     console.log(chainId);
   });
