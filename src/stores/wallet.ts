@@ -57,17 +57,6 @@ export const provider = writable<ethers.providers.Web3Provider | null>();
 
 export const accountsChanged = writable(0);
 
-derived(provider, ($provider) => {
-  console.log("provider?");
-  if ($provider) {
-    console.log("provider");
-    $provider.on("accountsChanged", (accounts: string[]) => {
-      console.log(accounts);
-    });
-    return () => $provider.off("accountsChanged");
-  }
-});
-
 export const signer: Readable<ethers.providers.JsonRpcSigner | null> = derived(
   [provider, accountsChanged],
   ([$provider], set) => {
