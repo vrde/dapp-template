@@ -8,7 +8,7 @@ export async function connect() {
     walletconnect: {
       package: WalletConnectProvider,
       options: {
-        infuraId: "INFURA ID",
+        infuraId: import.meta.env.VITE_INFURA_API_KEY,
       },
     },
   };
