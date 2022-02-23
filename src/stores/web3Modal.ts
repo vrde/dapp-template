@@ -44,3 +44,15 @@ export async function connectWeb3Modal() {
   web3ModalConnection = await web3Modal.connect();
   return web3ModalConnection;
 }
+
+/**
+ * Disconnect to the web3 agent.
+ */
+export async function disconnectWeb3Modal() {
+  if (web3Modal) {
+    web3Modal.clearCachedProvider();
+  }
+  if (web3ModalConnection) {
+    web3ModalConnection.removeAllListeners();
+  }
+}

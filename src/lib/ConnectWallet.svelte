@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { connect } from "../stores/wallet";
+  import { connect, disconnect, signer } from "../stores/wallet";
 
   let error: string;
 
@@ -11,9 +11,17 @@
       error = "Unable to connect your wallet.";
     }
   }
+
+  async function handleDisconnect() {
+    await disconnect();
+  }
 </script>
 
-<button on:click={handleConnect}>Connect wallet</button>
-{#if error}
-  <p>{error}</p>
+{#if $signer}
+  <button on:click={handleDisconnect}>Disconnect wallet</button>
+{:else}
+  <button on:click={handleConnect}>Connect wallet</button>
+  {#if error}
+    <p>{error}</p>
+  {/if}
 {/if}

@@ -1,6 +1,10 @@
 import { ethers, Signer, BigNumber } from "ethers";
 import { derived, Readable, writable } from "svelte/store";
-import { connectWeb3Modal, initWeb3Modal } from "./web3Modal";
+import {
+  connectWeb3Modal,
+  disconnectWeb3Modal,
+  initWeb3Modal,
+} from "./web3Modal";
 
 export async function init() {
   const modal = await initWeb3Modal();
@@ -23,9 +27,20 @@ export async function connect() {
   connection.on("chainChanged", (chainId: number) => {
     connect();
   });
+  /*
+  connection.on("connect", (info: { chainId: number }) => {
+    console.log("connect", info);
+  });
+  connection.on("disconnect", (error: { code: number; message: string }) => {
+    console.log("disconnect", error);
+  });
+  */
 }
 
-export async function disconnect() {}
+export async function disconnect() {
+  await disconnectWeb3Modal();
+  provider.set(null);
+}
 
 export const provider = writable<ethers.providers.Web3Provider | null>();
 

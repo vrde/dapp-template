@@ -4,6 +4,7 @@
   import { formatEther } from "ethers/lib/utils";
 </script>
 
+<ConnectWallet />
 {#if $signer}
   <ul>
     <li>Address: {$address}</li>
@@ -12,6 +13,4 @@
       <li>Balance: {formatEther($balance)} Eth</li>
     {/if}
   </ul>
-{:else}
-  <ConnectWallet />
 {/if}
