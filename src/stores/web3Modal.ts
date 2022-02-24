@@ -22,7 +22,7 @@ export async function initWeb3Modal() {
     },
   };
   web3Modal = new Web3Modal({
-    network: "mainnet",
+    network: import.meta.env.VITE_DEFAULT_NETWORK,
     cacheProvider: true,
     providerOptions,
   });

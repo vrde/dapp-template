@@ -15,6 +15,8 @@ export async function init() {
       console.log("Cannot autoconnect:", e);
       modal.clearCachedProvider();
     }
+  } else {
+    await connectReadOnly();
   }
 }
 
@@ -22,9 +24,11 @@ export async function connect() {
   const connection = await connectWeb3Modal();
   provider.set(new ethers.providers.Web3Provider(connection));
   connection.on("accountsChanged", (accounts: string[]) => {
+    console.log("User changed account", accounts);
     accountsChanged.set(Date.now());
   });
   connection.on("chainChanged", (chainId: number) => {
+    console.log("User changed network", chainId);
     connect();
   });
   /*
@@ -37,19 +41,25 @@ export async function connect() {
   */
 }
 
+export async function connectReadOnly() {
+  provider.set(ethers.getDefaultProvider(import.meta.env.VITE_DEFAULT_NETWORK));
+}
+
 export async function disconnect() {
   await disconnectWeb3Modal();
   provider.set(null);
 }
 
-export const provider = writable<ethers.providers.Web3Provider | null>();
+export const provider = writable<
+  ethers.providers.Web3Provider | ethers.providers.BaseProvider | null
+>();
 
 export const accountsChanged = writable(0);
 
 export const signer: Readable<Signer | null> = derived(
   [provider, accountsChanged],
   ([$provider], set) => {
-    if ($provider) {
+    if ($provider && $provider instanceof ethers.providers.Web3Provider) {
       (async () => {
         const _signer = $provider.getSigner();
         let _address: string;
@@ -99,7 +109,6 @@ export const network: Readable<string | null> = derived(
 export const balance: Readable<BigNumber | null> = derived(
   signer,
   ($signer, set) => {
-    console.log("balance", $signer);
     if ($signer) {
       $signer.getBalance().then(set);
     } else {
