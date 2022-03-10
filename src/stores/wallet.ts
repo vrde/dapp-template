@@ -1,5 +1,5 @@
 import { ethers, Signer, BigNumber } from "ethers";
-import { derived, Readable, writable } from "svelte/store";
+import { derived, writable, type Readable } from "svelte/store";
 import {
   connectWeb3Modal,
   disconnectWeb3Modal,
