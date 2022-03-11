@@ -7,6 +7,7 @@ specifiers:
   '@tsconfig/svelte': ^3.0.0
   '@walletconnect/web3-provider': ^1.7.4
   ethers: ^5.6.0
+  rollup-plugin-polyfill-node: ^0.8.0
   svelte: ^3.46.4
   svelte-check: ^2.4.5
   svelte-preprocess: ^4.10.4
@@ -23,6 +24,7 @@ devDependencies:
   '@tsconfig/svelte': 3.0.0
   '@walletconnect/web3-provider': 1.7.4
   ethers: 5.6.0
+  rollup-plugin-polyfill-node: 0.8.0
   svelte: 3.46.4
   svelte-check: 2.4.5_svelte@3.46.4
   svelte-preprocess: 4.10.4_svelte@3.46.4+typescript@4.6.2
@@ -3060,6 +3062,14 @@ packages:
     hasBin: true
     dependencies:
       bn.js: 5.2.0
+    dev: true
+
+  /rollup-plugin-polyfill-node/0.8.0:
+    resolution: {integrity: sha512-C4UeKedOmOBkB3FgR+z/v9kzRwV1Q/H8xWs1u1+CNe4XOV6hINfOrcO+TredKxYvopCmr+WKUSNsFUnD1RLHgQ==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/plugin-inject': 4.0.4
     dev: true
 
   /rollup/2.67.3:
