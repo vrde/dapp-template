@@ -1,5 +1,6 @@
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { infuraKey } from "./config";
 
 let web3Modal: Web3Modal;
 let web3ModalConnection: any;
@@ -17,13 +18,13 @@ export async function initWeb3Modal() {
     walletconnect: {
       package: WalletConnectProvider,
       options: {
-        infuraId: import.meta.env.VITE_INFURA_API_KEY,
+        infuraId: infuraKey,
       },
     },
   };
   web3Modal = new Web3Modal({
-    network: import.meta.env.VITE_DEFAULT_NETWORK,
-    cacheProvider: true,
+    //network: import.meta.env.VITE_ETHEREUM_DEFAULT_NETWORK,
+    //cacheProvider: true,
     providerOptions,
   });
   return web3Modal;

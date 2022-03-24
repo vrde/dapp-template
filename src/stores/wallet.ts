@@ -1,5 +1,6 @@
 import { ethers, Signer, BigNumber } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
+import { ethereumEndpoint, ethereumChainId } from "./config";
 import {
   connectWeb3Modal,
   disconnectWeb3Modal,
@@ -7,22 +8,27 @@ import {
 } from "./web3Modal";
 
 export async function init() {
-  const modal = await initWeb3Modal();
-  if (modal.cachedProvider) {
-    try {
-      await connect();
-    } catch (e) {
-      console.log("Cannot autoconnect:", e);
-      modal.clearCachedProvider();
-    }
-  } else {
-    await connectReadOnly();
-  }
+  localStorage.removeItem("walletconnect");
+  await initWeb3Modal();
+  await connectReadOnly();
 }
 
 export async function connect() {
   const connection = await connectWeb3Modal();
-  provider.set(new ethers.providers.Web3Provider(connection));
+  const web3Provider = new ethers.providers.Web3Provider(connection);
+
+  const { name, chainId } = await web3Provider.getNetwork();
+
+  if (chainId !== ethereumChainId) {
+    networkError.set({
+      got: name,
+      want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
+    });
+  } else {
+    networkError.set(null);
+  }
+  provider.set(web3Provider);
+
   connection.on("accountsChanged", (accounts: string[]) => {
     console.log("User changed account", accounts);
     accountsChanged.set(Date.now());
@@ -42,24 +48,29 @@ export async function connect() {
 }
 
 export async function connectReadOnly() {
-  provider.set(ethers.getDefaultProvider(import.meta.env.VITE_DEFAULT_NETWORK));
+  providerReadOnly.set(new ethers.providers.JsonRpcProvider(ethereumEndpoint));
 }
 
 export async function disconnect() {
+  // FIXME: would be much better if this was handled by web3modal
+  localStorage.removeItem("walletconnect");
   await disconnectWeb3Modal();
-  provider.set(null);
+  await connectReadOnly();
 }
 
-export const provider = writable<
-  ethers.providers.Web3Provider | ethers.providers.BaseProvider | null
->();
+export const networkError = writable<{ got: string; want: string } | null>();
+
+export const provider = writable<ethers.providers.Web3Provider | null>();
+
+export const providerReadOnly =
+  writable<ethers.providers.JsonRpcProvider | null>();
 
 export const accountsChanged = writable(0);
 
 export const signer: Readable<Signer | null> = derived(
   [provider, accountsChanged],
   ([$provider], set) => {
-    if ($provider && $provider instanceof ethers.providers.Web3Provider) {
+    if ($provider) {
       (async () => {
         const _signer = $provider.getSigner();
         let _address: string;
@@ -84,11 +95,15 @@ export const signer: Readable<Signer | null> = derived(
 
 export const address = writable<string | null>();
 
+export const shortAddress = derived(address, ($address) =>
+  $address ? $address.substring(0, 6) + "…" + $address.substring(38) : null
+);
+
 export const chainId: Readable<number | null> = derived(
-  signer,
-  ($signer, set) => {
-    if ($signer) {
-      $signer.getChainId().then(set);
+  provider,
+  ($provider, set) => {
+    if ($provider) {
+      $provider.getNetwork().then(({ chainId }) => set(chainId));
     } else {
       set(null);
     }
@@ -99,7 +114,7 @@ export const network: Readable<string | null> = derived(
   provider,
   ($provider, set) => {
     if ($provider) {
-      $provider.getNetwork().then((network) => set(network.name));
+      $provider.getNetwork().then(({ name }) => set(name));
     } else {
       set(null);
     }
@@ -115,4 +130,10 @@ export const balance: Readable<BigNumber | null> = derived(
       set(null);
     }
   }
+);
+
+export const etherscanUrl = derived(
+  [chainId, network],
+  ([$chainId, $network]) =>
+    `https://${$chainId === 1 ? "" : $network + "."}etherscan.io`
 );

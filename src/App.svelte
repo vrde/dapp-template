@@ -1,18 +1,34 @@
 <script lang="ts">
-  import Header from "./lib/Header.svelte";
-  import SignMessage from "./lib/SignMessage.svelte";
-  import { init, signer } from "./stores/wallet";
+  import Header from "./Header.svelte";
+  import { init } from "./stores/wallet";
 
   const initializing = init();
 </script>
 
 {#await initializing}
-  Loading
+  <p>Loading please wait…</p>
 {:then}
-  <Header />
-  <main>
-    {#if $signer}
-      <SignMessage />
-    {/if}
-  </main>
+  <header>
+    <Header />
+  </header>
+  <main>hello</main>
+{:catch}
+  <p>There was an error loading the page.</p>
 {/await}
+
+<style>
+  main {
+    max-width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  p {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+</style>
