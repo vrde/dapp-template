@@ -6,25 +6,26 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check-updates": "pnpx npm-check-updates"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@rollup/plugin-inject": "^4.0.4",
     "@rollup/plugin-replace": "^4.0.0",
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.40",
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.44",
     "@tsconfig/svelte": "^3.0.0",
-    "@walletconnect/web3-provider": "^1.7.5",
-    "ethers": "^5.6.1",
-    "rollup-plugin-polyfill-node": "^0.8.0",
-    "svelte": "^3.46.4",
-    "svelte-check": "^2.4.6",
-    "svelte-preprocess": "^4.10.4",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.2",
+    "@walletconnect/web3-provider": "^1.7.8",
+    "ethers": "^5.6.5",
+    "rollup-plugin-polyfill-node": "^0.9.0",
+    "svelte": "^3.48.0",
+    "svelte-check": "^2.7.0",
+    "svelte-preprocess": "^4.10.6",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4",
     "util": "^0.12.4",
-    "vite": "^2.8.6",
+    "vite": "^2.9.9",
     "vite-plugin-html": "^3.2.0",
-    "web3modal": "^1.9.5"
+    "web3modal": "^1.9.7"
   }
 }
