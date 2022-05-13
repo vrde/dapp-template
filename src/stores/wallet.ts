@@ -15,28 +15,31 @@ export async function init() {
 
 export async function connect() {
   const connection = await connectWeb3Modal();
-  const web3Provider = new ethers.providers.Web3Provider(connection);
+  async function resetProvider() {
+    const web3Provider = new ethers.providers.Web3Provider(connection);
 
-  const { name, chainId } = await web3Provider.getNetwork();
+    const { name, chainId } = await web3Provider.getNetwork();
 
-  if (chainId !== ethereumChainId) {
-    networkError.set({
-      got: name,
-      want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
-    });
-  } else {
-    networkError.set(null);
+    if (chainId !== ethereumChainId) {
+      networkError.set({
+        got: name,
+        want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
+      });
+    } else {
+      networkError.set(null);
+    }
+    provider.set(web3Provider);
   }
-  provider.set(web3Provider);
-
+  await resetProvider();
   connection.on("accountsChanged", (accounts: string[]) => {
     console.log("User changed account", accounts);
     accountsChanged.set(Date.now());
   });
-  connection.on("chainChanged", (chainId: number) => {
-    console.log("User changed network", chainId);
-    connect();
+  connection.on("chainChanged", async (newChainId: number) => {
+    console.log("User changed network", newChainId);
+    await resetProvider();
   });
+
   /*
   connection.on("connect", (info: { chainId: number }) => {
     console.log("connect", info);
