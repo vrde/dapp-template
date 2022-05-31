@@ -59,6 +59,7 @@ export async function disconnect() {
   localStorage.removeItem("walletconnect");
   await disconnectWeb3Modal();
   await connectReadOnly();
+  provider.set(null);
 }
 
 export const networkError = writable<{ got: string; want: string } | null>();
