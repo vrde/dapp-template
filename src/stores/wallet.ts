@@ -104,7 +104,7 @@ export const shortAddress = derived(address, ($address) =>
 );
 
 export const chainId: Readable<number | null> = derived(
-  provider,
+  providerReadOnly,
   ($provider, set) => {
     if ($provider) {
       $provider.getNetwork().then(({ chainId }) => set(chainId));
@@ -115,7 +115,7 @@ export const chainId: Readable<number | null> = derived(
 );
 
 export const network: Readable<string | null> = derived(
-  provider,
+  providerReadOnly,
   ($provider, set) => {
     if ($provider) {
       $provider.getNetwork().then(({ name }) => set(name));
