@@ -15,31 +15,48 @@ export async function init() {
 
 export async function connect() {
   const connection = await connectWeb3Modal();
-  async function resetProvider() {
+  async function resetProvider(promptNetwork = false) {
     const web3Provider = new ethers.providers.Web3Provider(connection);
 
     const { name, chainId } = await web3Provider.getNetwork();
 
     if (chainId !== ethereumChainId) {
-      networkError.set({
-        got: name,
-        want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
-      });
+      if (promptNetwork && web3Provider.provider?.request) {
+        try {
+          await web3Provider.provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x" + ethereumChainId.toString(16) }],
+          });
+        } catch (e) {
+          networkError.set({
+            got: name,
+            want:
+              ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
+          });
+        }
+      } else {
+        networkError.set({
+          got: name,
+          want: ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
+        });
+      }
     } else {
       networkError.set(null);
     }
     provider.set(web3Provider);
   }
-  await resetProvider();
+
+  await resetProvider(true);
+
   connection.on("accountsChanged", (accounts: string[]) => {
     console.log("User changed account", accounts);
     accountsChanged.set(Date.now());
   });
+
   connection.on("chainChanged", async (newChainId: number) => {
     console.log("User changed network", newChainId);
     await resetProvider();
   });
-
   /*
   connection.on("connect", (info: { chainId: number }) => {
     console.log("connect", info);
@@ -129,7 +146,12 @@ export const balance: Readable<BigNumber | null> = derived(
   signer,
   ($signer, set) => {
     if ($signer) {
-      $signer.getBalance().then(set);
+      $signer
+        .getBalance()
+        .then(set)
+        .catch((e) => {
+          console.log("Error getting balance", e);
+        });
     } else {
       set(null);
     }

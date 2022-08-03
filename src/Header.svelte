@@ -6,6 +6,7 @@
     balance,
     network,
     networkError,
+    connect,
   } from "./stores/wallet";
   import { formatEther } from "ethers/lib/utils";
 </script>
@@ -17,6 +18,7 @@
     To use this app, connect your wallet to <strong>
       {$networkError.want}
     </strong>
+    <button on:click={connect}>Reconnect</button>
   </p>
 {/if}
 

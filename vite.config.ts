@@ -51,17 +51,10 @@ export default async ({ mode }) => {
 
   return defineConfig({
     base: "./",
-    // Node.js global to browser globalThis
-    define: {
-      global: "globalThis",
-    },
     plugins: [
       svelte(),
       replace({
         __VITE_CONTRACTS_ADDRESSES__: JSON.stringify(contractsAddresses),
-      }),
-      inject({
-        util: "util/",
       }),
       createHtmlPlugin({
         inject: {
@@ -71,23 +64,5 @@ export default async ({ mode }) => {
         },
       }),
     ],
-    build: {
-      rollupOptions: {
-        plugins: [nodePolyfills()],
-      },
-      commonjsOptions: {
-        transformMixedEsModules: true,
-      },
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        // Node.js global to browser globalThis
-        define: {
-          global: "globalThis",
-        },
-        // Enable esbuild polyfill plugins
-        plugins: [NodeGlobalsPolyfillPlugin({ buffer: true })],
-      },
-    },
   });
 };

@@ -1,5 +1,9 @@
 import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
+
+// Would definitely prefer to import walletconnect with
+// import WalletConnectProvider from "@walletconnect/web3-provider";
+// but it's a nightmare, see https://github.com/vitejs/vite/issues/7257#issuecomment-1079579892
+import WalletConnectProvider from "@walletconnect/web3-provider/dist/umd/index.min.js";
 import { infuraKey } from "./config";
 
 let web3Modal: Web3Modal;
