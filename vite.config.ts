@@ -1,9 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import replace from "@rollup/plugin-replace";
-import inject from "@rollup/plugin-inject";
-import nodePolyfills from "rollup-plugin-polyfill-node";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { readFileSync } from "fs";
 

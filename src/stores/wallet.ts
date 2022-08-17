@@ -1,6 +1,7 @@
 import { ethers, Signer, BigNumber } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
 import { ethereumEndpoint, ethereumChainId } from "./config";
+import { addEthereumChain } from "./networks";
 import {
   connectWeb3Modal,
   disconnectWeb3Modal,
@@ -15,9 +16,9 @@ export async function init() {
 
 export async function connect() {
   const connection = await connectWeb3Modal();
+
   async function resetProvider(promptNetwork = false) {
     const web3Provider = new ethers.providers.Web3Provider(connection);
-
     const { name, chainId } = await web3Provider.getNetwork();
 
     if (chainId !== ethereumChainId) {
@@ -27,12 +28,25 @@ export async function connect() {
             method: "wallet_switchEthereumChain",
             params: [{ chainId: "0x" + ethereumChainId.toString(16) }],
           });
-        } catch (e) {
-          networkError.set({
-            got: name,
-            want:
-              ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
-          });
+        } catch (e: any) {
+          console.error(e);
+          if (e.code === 4902) {
+            try {
+              await addEthereumChain(
+                web3Provider,
+                "0x" + ethereumChainId.toString(16)
+              );
+              console.log("Network added");
+            } catch (e) {
+              console.error(e);
+            }
+          } else {
+            networkError.set({
+              got: name,
+              want:
+                ethers.providers.getNetwork(ethereumChainId)?.name || "unknown",
+            });
+          }
         }
       } else {
         networkError.set({
@@ -45,18 +59,16 @@ export async function connect() {
     }
     provider.set(web3Provider);
   }
-
   await resetProvider(true);
-
   connection.on("accountsChanged", (accounts: string[]) => {
     console.log("User changed account", accounts);
     accountsChanged.set(Date.now());
   });
-
   connection.on("chainChanged", async (newChainId: number) => {
     console.log("User changed network", newChainId);
     await resetProvider();
   });
+
   /*
   connection.on("connect", (info: { chainId: number }) => {
     console.log("connect", info);
@@ -118,6 +130,17 @@ export const address = writable<string | null>();
 
 export const shortAddress = derived(address, ($address) =>
   $address ? $address.substring(0, 6) + "…" + $address.substring(38) : null
+);
+
+export const signerChainId: Readable<number | null> = derived(
+  provider,
+  ($provider, set) => {
+    if ($provider) {
+      $provider.getNetwork().then(({ chainId }) => set(chainId));
+    } else {
+      set(null);
+    }
+  }
 );
 
 export const chainId: Readable<number | null> = derived(

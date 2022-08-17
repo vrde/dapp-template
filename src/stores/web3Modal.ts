@@ -22,6 +22,11 @@ export async function initWeb3Modal() {
     walletconnect: {
       package: WalletConnectProvider,
       options: {
+        /*
+        rpc: {
+          137: "https://matic-mainnet.chainstacklabs.com",
+        },
+        */
         infuraId: infuraKey,
       },
     },
