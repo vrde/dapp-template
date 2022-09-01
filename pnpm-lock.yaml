@@ -4,39 +4,39 @@ specifiers:
   '@esbuild-plugins/node-globals-polyfill': ^0.1.1
   '@rollup/plugin-inject': ^4.0.4
   '@rollup/plugin-replace': ^4.0.0
-  '@sveltejs/vite-plugin-svelte': ^1.0.2
+  '@sveltejs/vite-plugin-svelte': ^1.0.3
   '@tsconfig/svelte': ^3.0.0
   '@walletconnect/web3-provider': ^1.8.0
   ethers: ^5.7.0
   rollup-plugin-polyfill-node: ^0.10.2
   svelte: ^3.49.0
-  svelte-check: ^2.8.1
+  svelte-check: ^2.9.0
   svelte-preprocess: ^4.10.7
   tslib: ^2.4.0
-  typescript: ^4.7.4
+  typescript: ^4.8.2
   util: ^0.12.4
   vite: ^3.0.9
   vite-plugin-html: ^3.2.0
-  web3modal: ^1.9.8
+  web3modal: ^1.9.9
 
 devDependencies:
   '@esbuild-plugins/node-globals-polyfill': 0.1.1
   '@rollup/plugin-inject': 4.0.4
   '@rollup/plugin-replace': 4.0.0
-  '@sveltejs/vite-plugin-svelte': 1.0.2_svelte@3.49.0+vite@3.0.9
+  '@sveltejs/vite-plugin-svelte': 1.0.3_svelte@3.49.0+vite@3.0.9
   '@tsconfig/svelte': 3.0.0
   '@walletconnect/web3-provider': 1.8.0
   ethers: 5.7.0
   rollup-plugin-polyfill-node: 0.10.2
   svelte: 3.49.0
-  svelte-check: 2.8.1_svelte@3.49.0
-  svelte-preprocess: 4.10.7_uslzfc62di2n2otc2tvfklnwji
+  svelte-check: 2.9.0_svelte@3.49.0
+  svelte-preprocess: 4.10.7_k5n4uipe6734vn7334tf7n5ml4
   tslib: 2.4.0
-  typescript: 4.7.4
+  typescript: 4.8.2
   util: 0.12.4
   vite: 3.0.9
   vite-plugin-html: 3.2.0_vite@3.0.9
-  web3modal: 1.9.8
+  web3modal: 1.9.9
 
 packages:
 
@@ -675,8 +675,8 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.2_svelte@3.49.0+vite@3.0.9:
-    resolution: {integrity: sha512-8tTVbNuraeDchBaArNbwaZLpO0feM7BRSdZU5yeM4Clasx2p1p1CYBoWh+VgxZlxiark49HXummkHqKztbl8lA==}
+  /@sveltejs/vite-plugin-svelte/1.0.3_svelte@3.49.0+vite@3.0.9:
+    resolution: {integrity: sha512-0Qu51m2W9RBlxWPp8i31KJpnqmjWMOne8vAzgmOX6ZM9uX+/RAv6BNhEMcNoP5MsyLjyW1ZTCiJoaZZ5EeqpFg==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
       diff-match-patch: ^1.0.5
@@ -3646,8 +3646,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svelte-check/2.8.1_svelte@3.49.0:
-    resolution: {integrity: sha512-cibyY1sgt3ONIDnQbSgV2X9AJFhwEslRHNo95lijrYfPzVEvTvbmL2ohsUyqB5L7j1GhLXtQbjCJ4lZZ/fwbeQ==}
+  /svelte-check/2.9.0_svelte@3.49.0:
+    resolution: {integrity: sha512-9AVrtP7WbfDgCdqTZNPdj5CCCy1OrYMxFVWAWzNw7fl93c9klFJFtqzVXa6fovfQ050CcpUyJE2dPFL9TFAREw==}
     hasBin: true
     peerDependencies:
       svelte: ^3.24.0
@@ -3659,8 +3659,8 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 3.49.0
-      svelte-preprocess: 4.10.7_uslzfc62di2n2otc2tvfklnwji
-      typescript: 4.7.4
+      svelte-preprocess: 4.10.7_k5n4uipe6734vn7334tf7n5ml4
+      typescript: 4.8.2
     transitivePeerDependencies:
       - '@babel/core'
       - coffeescript
@@ -3683,7 +3683,7 @@ packages:
       svelte: 3.49.0
     dev: true
 
-  /svelte-preprocess/4.10.7_uslzfc62di2n2otc2tvfklnwji:
+  /svelte-preprocess/4.10.7_k5n4uipe6734vn7334tf7n5ml4:
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -3731,7 +3731,7 @@ packages:
       sorcery: 0.10.0
       strip-indent: 3.0.0
       svelte: 3.49.0
-      typescript: 4.7.4
+      typescript: 4.8.2
     dev: true
 
   /svelte/3.49.0:
@@ -3802,8 +3802,8 @@ packages:
       is-typedarray: 1.0.0
     dev: true
 
-  /typescript/4.7.4:
-    resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
+  /typescript/4.8.2:
+    resolution: {integrity: sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
@@ -3938,8 +3938,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /web3modal/1.9.8:
-    resolution: {integrity: sha512-ruYsh4TV1SUAljBW/Pd4itW2idKlo9xr/g2dKhBDdaafWNCVdpaK92cQ7EM53rg2KQHWJhqj1IThbv7cPV7ayA==}
+  /web3modal/1.9.9:
+    resolution: {integrity: sha512-ML1C4xH+JTSHHkKbjxuF+f5B3cDUOCnrdQZ8Mlzippq7zRKHf3NBeuIvDdNjtVclJ2S4zYYVmVqRWrgB11ej8A==}
     dependencies:
       detect-browser: 5.3.0
       prop-types: 15.8.1
