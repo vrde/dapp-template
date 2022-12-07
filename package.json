@@ -36,11 +36,9 @@
   },
   "dependencies": {
     "@wagmi/core": "^0.7.9",
-    "@walletconnect/sign-client": "^2.1.4",
     "@web3modal/core": "2.0.0-beta.7",
     "@web3modal/ethereum": "2.0.0-beta.8",
     "@web3modal/html": "2.0.0-beta.8",
-    "@web3modal/standalone": "2.0.0-beta.7",
     "@web3modal/ui": "2.0.0-beta.7"
   }
 }
