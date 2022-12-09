@@ -4,10 +4,12 @@ import {
   evmosChain,
   ethereumChainId,
 } from "./config";
-import { ethers, Signer, BigNumber } from "ethers";
+import { ethers, BigNumber } from "ethers";
+import type { Signer } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
-import { chain, configureChains, createClient } from "@wagmi/core";
+import { chain, configureChains, createClient, fetchSigner } from "@wagmi/core";
 import { infuraProvider } from "@wagmi/core/providers/infura";
+import { asyncDerived } from "./utils";
 
 import {
   EthereumClient,
@@ -41,10 +43,6 @@ export const web3Modal = new Web3Modal(
   ethClient
 );
 
-ethClient.watchAccount((account) => {
-  address.set(account.address);
-});
-
 ethClient.watchNetwork(async (network) => {
   const chainId = network?.chain?.id;
   if (chainId) {
@@ -58,7 +56,8 @@ ethClient.watchNetwork(async (network) => {
       });
       return;
     }
-    signer.set(await wagmiClient.connector?.getSigner({ chainId }));
+    signer.set(await fetchSigner({ chainId }));
+    ethClient.getConnectorWallets();
   } else {
     signer.set(null);
   }
@@ -68,7 +67,13 @@ ethClient.watchNetwork(async (network) => {
 export const signer = writable<Signer | null>(null);
 export const networkName = writable<string | undefined>();
 export const networkError = writable<{ got: string; want: string } | null>();
-export const address = writable<string | undefined>();
+
+export const address: Readable<string | null> = asyncDerived(
+  signer,
+  async ($signer, set) =>
+    $signer ? set(await $signer.getAddress()) : set(null)
+);
+
 export const shortAddress = derived(address, ($address) =>
   $address ? $address.substring(0, 6) + "…" + $address.substring(38) : null
 );

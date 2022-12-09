@@ -89,6 +89,20 @@ export function derivedWhile<S extends Stores, T>(
   };
 }
 
+export function asyncDerived<S extends Stores, T>(
+  stores: S,
+  fn: (values: StoresValues<S>, set: (value: T) => void) => Promise<any>,
+  initial_value?: T
+) {
+  return derived(
+    stores,
+    ($stores, set) => {
+      Promise.resolve(fn($stores, set));
+    },
+    initial_value
+  );
+}
+
 export function sleep(ms: number) {
   return new Promise<void>((resolve) => {
     setTimeout(resolve, ms);
