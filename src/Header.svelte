@@ -1,19 +1,19 @@
 <script lang="ts">
   import ConnectWallet from "./ConnectWallet.svelte";
   import { formatEther } from "ethers/lib/utils";
-  import { signer, address, balance, networkName } from "./stores/wallet"
+  import { signer, address, balance, networkName, networkError, connect } from "./stores/wallet"
 </script>
 
 <ConnectWallet />
 
-<!-- {#if $networkError}
+{#if $networkError}
   <p>
-    To use this app, connect your wallet to <strong>
-      {$networkError.want}
-    </strong>
+    To use this app, disconnect from <strong>{$networkError.got}</strong> 
+    and reconnect your wallet to <strong>{$networkError.want}</strong>
+    <br/>
     <button on:click={connect}>Reconnect</button>
   </p>
-{/if} -->
+{/if}
 
 {#if $signer}
   <ul>

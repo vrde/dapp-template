@@ -13,7 +13,8 @@ export const ethereumChainId: number = parseInt(
   10
 );
 
-export const projectId: string = import.meta.env.VITE_PROJECT_ID;
+export const walletconnectProjectId: string = import.meta.env
+  .VITE_WALLETCONNECT_PROJECT_ID;
 
 export const evmosChain = {
   mainnet: {

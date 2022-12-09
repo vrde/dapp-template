@@ -1,30 +1,12 @@
 <script lang="ts">
-  import { signer, web3Modal, disconnect } from "./stores/wallet"
-
-  let error: string;
-
-  async function handleConnect() {
-    try {
-      await web3Modal.openModal();
-    } catch (e) {
-      console.log("Error:", e);
-      error = "Unable to connect your wallet.";
-    }
-  }
-
-  async function handleDisconnect() {
-    await disconnect();
-  }
+  import { signer, connect, disconnect } from "./stores/wallet"
 </script>
 
 {#if $signer}
-  <button on:click={handleDisconnect}>Disconnect wallet</button>
+  <button on:click={disconnect}>Disconnect wallet</button>
 {:else}
   <w3m-core-button class="connect-wallet"></w3m-core-button>
-  <button on:click={handleConnect}>Custom Connect Wallet</button>
-  {#if error}
-    <p>{error}</p>
-  {/if}
+  <button on:click={connect}>Custom Connect Wallet</button>
 {/if}
 
 <style>

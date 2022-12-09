@@ -1,5 +1,10 @@
-import { projectId, infuraKey, evmosChain } from "./config";
-import { Signer, BigNumber } from "ethers";
+import {
+  walletconnectProjectId,
+  infuraKey,
+  evmosChain,
+  ethereumChainId,
+} from "./config";
+import { ethers, Signer, BigNumber } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
 import { chain, configureChains, createClient } from "@wagmi/core";
 import { infuraProvider } from "@wagmi/core/providers/infura";
@@ -11,7 +16,7 @@ import {
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/html";
 
-if (!projectId) {
+if (!walletconnectProjectId) {
   throw new Error("You need to provide VITE_PROJECT_ID env variable");
 }
 
@@ -20,7 +25,7 @@ const defaultChains = [chain.mainnet, evmosChain.mainnet, evmosChain.testnet];
 // Configure wagmi client
 const { chains, provider } = configureChains(defaultChains, [
   infuraProvider({ apiKey: infuraKey }),
-  walletConnectProvider({ projectId }),
+  walletConnectProvider({ projectId: walletconnectProjectId }),
 ]);
 
 const wagmiClient = createClient({
@@ -31,7 +36,10 @@ const wagmiClient = createClient({
 
 // Create ethereum and modal clients
 const ethClient = new EthereumClient(wagmiClient, chains);
-export const web3Modal = new Web3Modal({ projectId }, ethClient);
+export const web3Modal = new Web3Modal(
+  { projectId: walletconnectProjectId },
+  ethClient
+);
 
 ethClient.watchAccount((account) => {
   address.set(account.address);
@@ -40,6 +48,16 @@ ethClient.watchAccount((account) => {
 ethClient.watchNetwork(async (network) => {
   const chainId = network?.chain?.id;
   if (chainId) {
+    if (chainId !== ethereumChainId) {
+      const currentChainName = network?.chain?.name || "unknown";
+      const ethereumChainName =
+        ethers.providers.getNetwork(ethereumChainId)?.name || "unknown";
+      networkError.set({
+        got: `${currentChainName}:${chainId}`,
+        want: `${ethereumChainName}:${ethereumChainId}`,
+      });
+      return;
+    }
     signer.set(await wagmiClient.connector?.getSigner({ chainId }));
   } else {
     signer.set(null);
@@ -49,6 +67,7 @@ ethClient.watchNetwork(async (network) => {
 
 export const signer = writable<Signer | null>(null);
 export const networkName = writable<string | undefined>();
+export const networkError = writable<{ got: string; want: string } | null>();
 export const address = writable<string | undefined>();
 export const shortAddress = derived(address, ($address) =>
   $address ? $address.substring(0, 6) + "…" + $address.substring(38) : null
@@ -69,6 +88,10 @@ export const balance: Readable<BigNumber | null> = derived(
     }
   }
 );
+
+export async function connect() {
+  web3Modal.openModal();
+}
 
 export async function disconnect() {
   ethClient.disconnect();
