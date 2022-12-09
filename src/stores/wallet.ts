@@ -57,7 +57,6 @@ ethClient.watchNetwork(async (network) => {
       return;
     }
     signer.set(await fetchSigner({ chainId }));
-    ethClient.getConnectorWallets();
   } else {
     signer.set(null);
   }
