@@ -1,27 +1,17 @@
 <script lang="ts">
-  import { connect, disconnect, signer } from "./stores/wallet";
-
-  let error: string;
-
-  async function handleConnect() {
-    try {
-      await connect();
-    } catch (e) {
-      console.log("Error:", e);
-      error = "Unable to connect your wallet.";
-    }
-  }
-
-  async function handleDisconnect() {
-    await disconnect();
-  }
+  import { signer, connect, disconnect } from "./stores/wallet"
 </script>
 
 {#if $signer}
-  <button on:click={handleDisconnect}>Disconnect wallet</button>
+  <button on:click={disconnect}>Disconnect wallet</button>
 {:else}
-  <button on:click={handleConnect}>Connect wallet</button>
-  {#if error}
-    <p>{error}</p>
-  {/if}
+  <w3m-core-button class="connect-wallet"></w3m-core-button>
+  <button on:click={connect}>Custom Connect Wallet</button>
 {/if}
+
+<style>
+  .connect-wallet {
+    display: block;
+    margin-bottom: 10px;
+  }
+</style>
