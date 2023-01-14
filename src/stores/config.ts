@@ -16,6 +16,7 @@ export const ethereumChainId: number = parseInt(
 export const walletconnectProjectId: string = import.meta.env
   .VITE_WALLETCONNECT_PROJECT_ID;
 
+/*
 export const evmosChain = {
   mainnet: {
     id: 9001,
@@ -52,3 +53,4 @@ export const evmosChain = {
     testnet: true,
   },
 };
+*/

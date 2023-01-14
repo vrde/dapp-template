@@ -1,13 +1,14 @@
-import {
-  walletconnectProjectId,
-  infuraKey,
-  evmosChain,
-  ethereumChainId,
-} from "./config";
+import { walletconnectProjectId, infuraKey, ethereumChainId } from "./config";
 import { ethers, BigNumber } from "ethers";
 import type { Signer } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
-import { chain, configureChains, createClient, fetchSigner } from "@wagmi/core";
+import {
+  chain,
+  configureChains,
+  createClient,
+  fetchSigner,
+  type Chain,
+} from "@wagmi/core";
 import { infuraProvider } from "@wagmi/core/providers/infura";
 import { asyncDerived } from "./utils";
 
@@ -18,26 +19,28 @@ import {
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/html";
 
-if (!walletconnectProjectId) {
-  throw new Error("You need to provide VITE_PROJECT_ID env variable");
+const defaultChains: Chain[] = [];
+
+if (ethereumChainId === 1) {
+  defaultChains.push(chain.mainnet);
+} else if (ethereumChainId === 5) {
+  defaultChains.push(chain.goerli);
 }
 
-const defaultChains = [chain.mainnet, evmosChain.mainnet, evmosChain.testnet];
-
 // Configure wagmi client
-const { chains, provider } = configureChains(defaultChains, [
+const { provider } = configureChains(defaultChains, [
   infuraProvider({ apiKey: infuraKey }),
   walletConnectProvider({ projectId: walletconnectProjectId }),
 ]);
 
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({ appName: "web3Modal", chains }),
+  connectors: modalConnectors({ appName: "web3Modal", chains: defaultChains }),
   provider,
 });
 
 // Create ethereum and modal clients
-const ethClient = new EthereumClient(wagmiClient, chains);
+const ethClient = new EthereumClient(wagmiClient, defaultChains);
 export const web3Modal = new Web3Modal(
   { projectId: walletconnectProjectId },
   ethClient

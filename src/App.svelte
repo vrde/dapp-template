@@ -1,6 +1,5 @@
 <script lang="ts">
   import Header from "./Header.svelte";
-  import * as wallet from "./stores/wallet"
 </script>
 
 <header>

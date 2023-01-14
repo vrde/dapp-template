@@ -36,7 +36,12 @@ export default async ({ mode }) => {
 
   const smartContractPath = env?.SMART_CONTRACT_PATH;
   if (!smartContractPath) {
-    console.error("Cannod find smart contract directory");
+    console.error("Cannot find smart contract directory");
+    process.exit(1);
+  }
+
+  if (!env.VITE_WALLETCONNECT_PROJECT_ID) {
+    console.error("Please set VITE_WALLETCONNECT_PROJECT_ID");
     process.exit(1);
   }
 
