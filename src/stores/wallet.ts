@@ -3,10 +3,11 @@ import { ethers, BigNumber } from "ethers";
 import type { Signer } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
 import {
-  chain,
   configureChains,
   createClient,
   fetchSigner,
+  goerli,
+  mainnet,
   type Chain,
 } from "@wagmi/core";
 import { infuraProvider } from "@wagmi/core/providers/infura";
@@ -22,9 +23,9 @@ import { Web3Modal } from "@web3modal/html";
 const defaultChains: Chain[] = [];
 
 if (ethereumChainId === 1) {
-  defaultChains.push(chain.mainnet);
+  defaultChains.push(mainnet);
 } else if (ethereumChainId === 5) {
-  defaultChains.push(chain.goerli);
+  defaultChains.push(goerli);
 }
 
 // Configure wagmi client
