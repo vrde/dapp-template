@@ -20,28 +20,28 @@ import {
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/html";
 
-const defaultChains: Chain[] = [];
+const chains: Chain[] = [];
 
 if (ethereumChainId === 1) {
-  defaultChains.push(mainnet);
+  chains.push(mainnet);
 } else if (ethereumChainId === 5) {
-  defaultChains.push(goerli);
+  chains.push(goerli);
 }
 
 // Configure wagmi client
-const { provider } = configureChains(defaultChains, [
+const { provider } = configureChains(chains, [
   infuraProvider({ apiKey: infuraKey }),
   walletConnectProvider({ projectId: walletconnectProjectId }),
 ]);
 
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({ appName: "web3Modal", chains: defaultChains }),
+  connectors: modalConnectors({ appName: "web3Modal", chains: chains }),
   provider,
 });
 
 // Create ethereum and modal clients
-const ethClient = new EthereumClient(wagmiClient, defaultChains);
+const ethClient = new EthereumClient(wagmiClient, chains);
 export const web3Modal = new Web3Modal(
   { projectId: walletconnectProjectId },
   ethClient
